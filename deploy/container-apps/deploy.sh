@@ -9,6 +9,6 @@ az containerapp create \
   --name parts-unlimited \
   --resource-group 'my-group' \
   --environment 'my-env' \
-  --image partsunlimitedweb.azurecr.io/web:v1.0 \
+  --image partsunlimitedweb.azurecr.io/app:v1.0 \
   --target-port 80 \
   --ingress 'external'
