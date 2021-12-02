@@ -23,9 +23,29 @@ public class PaymentsController : ControllerBase
     {
         return Enumerable.Range(1, 5).Select(index => new Payments
         {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            if (string.Equals(formCollection["PromoCode"].FirstOrDefault(), PromoCode,
+                    StringComparison.OrdinalIgnoreCase) == false)
+                {
+                    return View(order);
+                }
+                else
+                {
+                    order.Username = HttpContext.User.Identity.Name;
+                    order.OrderDate = DateTime.Now;
+
+                    //Add the Order
+                    _db.Orders.Add(order);
+
+                    //Process the order
+                    var cart = ShoppingCart.GetCart(_db, HttpContext);
+                    cart.CreateOrder(order);
+
+                    // Save all changes
+                    await _db.SaveChangesAsync(HttpContext.RequestAborted);
+
+                    return RedirectToAction("Complete",
+                        new { id = order.OrderId });
+                }
         })
         .ToArray();
     }
