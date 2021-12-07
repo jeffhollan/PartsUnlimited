@@ -56,7 +56,29 @@ namespace PartsUnlimited.Controllers
 
             try
             {
-                await client.PostAsJsonAsync(paymentController, formCollection);
+                if (string.Equals(formCollection["PromoCode"].FirstOrDefault(), PromoCode,
+                    StringComparison.OrdinalIgnoreCase) == false)
+                {
+                    return View(order);
+                }
+                else
+                {
+                    order.Username = HttpContext.User.Identity.Name;
+                    order.OrderDate = DateTime.Now;
+
+                    //Add the Order
+                    _db.Orders.Add(order);
+
+                    //Process the order
+                    var cart = ShoppingCart.GetCart(_db, HttpContext);
+                    cart.CreateOrder(order);
+
+                    // Save all changes
+                    await _db.SaveChangesAsync(HttpContext.RequestAborted);
+
+                    return RedirectToAction("Complete",
+                        new { id = order.OrderId });
+                }
             }
             catch
             {
