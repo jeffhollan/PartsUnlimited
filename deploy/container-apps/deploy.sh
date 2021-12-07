@@ -3,7 +3,8 @@ az containerapp env create \
   --resource-group 'my-group' \
   --logs-workspace-id $LOG_CLIENT_ID \
   --logs-workspace-key $LOG_CLIENT_SECRET \
-  --location "$LOCATION"
+  --location "$LOCATION" \
+  --query provisioningState
 
 az containerapp create \
   --name parts-unlimited \
@@ -11,4 +12,5 @@ az containerapp create \
   --environment 'my-env' \
   --image partsunlimitedweb.azurecr.io/app:v1.0 \
   --target-port 80 \
-  --ingress 'external'
+  --ingress 'external' \
+  --query configuration.ingress.fqdn
