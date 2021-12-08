@@ -10,7 +10,7 @@ az containerapp create \
   --name parts-unlimited \
   --resource-group 'my-group' \
   --environment 'my-env' \
-  --image partsunlimitedweb.azurecr.io/app:v1.0 \
+  --image partsunlimitedweb.azurecr.io/app:v1.1 \
   --target-port 80 \
   --ingress 'external' \
   --query configuration.ingress.fqdn
